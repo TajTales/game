@@ -1,0 +1,14 @@
+﻿  Block.cpp
+  Game.cpp
+C:\Users\Admin\source\repos\Project6\Game.cpp(55,26): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\Users\Admin\source\repos\Project6\Game.cpp(80,23): warning C4018: '>': signed/unsigned mismatch
+C:\Users\Admin\source\repos\Project6\Game.cpp(81,20): warning C4018: '>': signed/unsigned mismatch
+C:\Users\Admin\source\repos\Project6\Game.cpp(134,24): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\Users\Admin\source\repos\Project6\Game.cpp(150,23): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\Users\Admin\source\repos\Project6\Game.cpp(158,19): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\Users\Admin\source\repos\Project6\Game.cpp(325,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Admin\source\repos\Project6\Game.cpp(349,21): warning C4018: '<': signed/unsigned mismatch
+  RenderManager.cpp
+  main.cpp
+  Generating Code...
+  Project6.vcxproj -> C:\Users\Admin\source\repos\Project6\x64\Debug\Project6.exe
