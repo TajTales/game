@@ -3,10 +3,10 @@
 
 #include <string>
 #include <fstream>
-#include <queue> //for std::queue
-#include <set> //for std::set
-#include <map> //for std::map
-#include <utility> //for std::pair
+#include <queue> 
+#include <set> 
+#include <map> 
+#include <utility> 
 #include "RenderManager.h"
 #include "Block.h"
 
@@ -45,12 +45,6 @@ private:
 		const Direction direction, const State state);
 	bool moveObject(const unsigned int row, const unsigned int col, int rowMovement,
 		int colMovement, const State state);
-	void findPath(const int x, const int y);
-	bool BFS(std::queue<vertex>& wave, std::map<vertex, vertex>& parent,
-		std::set<vertex>& visited, vertex& current, vertex& target);
-	void animatePlayerMoving(const std::map<vertex, vertex>& parent,
-		const vertex& current, const vertex& target);
-
 private:
 	std::vector<std::vector<Block>> map;
 	SDL_Rect playerPos;
