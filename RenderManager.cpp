@@ -79,7 +79,7 @@ unsigned int RenderManager::getWindowHeight() const
 {
 	return sizeY;
 }
-void RenderManager::Render(std::vector<std::vector<Block>>& map, bool isFirstRender, bool shouldFlip)
+void RenderManager::Render(std::vector<std::vector<Block>>& map, bool isFirstRender, bool shouldFlip, const std::string& msg, const std::string& rec)
 {
 	if (isFirstRender)
 	{
@@ -114,11 +114,44 @@ void RenderManager::Render(std::vector<std::vector<Block>>& map, bool isFirstRen
 				SDL_RenderFillRect(renderer, &currBlock.position);
 		}
 	}
+	font = TTF_OpenFont("Roboto_Condensed-Black.ttf", 10);
+	SDL_Surface* blendedText = TTF_RenderText_Blended(font, msg.c_str(), textColor);
+	SDL_Texture* textTexture = SurfaceToTexture(blendedText);
+	SDL_Rect textRect = { 700, 500, 1, 1 };
+	SDL_QueryTexture(textTexture, NULL, NULL, &textRect.w, &textRect.h);
+	SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+	SDL_Surface* newblendedText = TTF_RenderText_Blended(font, rec.c_str(), textColor);
+	SDL_Texture* newtextTexture = SurfaceToTexture(newblendedText);
+	SDL_Rect recRect = { 700, 550, 1, 1 };
+	SDL_QueryTexture(newtextTexture, NULL, NULL, &recRect.w, &recRect.h);
+	SDL_RenderCopy(renderer, newtextTexture, NULL, &recRect);
+	std::string restartMessage = "Press R to restart";
+	SDL_Surface* restartblendedText = TTF_RenderText_Blended(font, restartMessage.c_str(), textColor);
+	SDL_Texture* restarttextTexture = SurfaceToTexture(restartblendedText);
+	SDL_Rect restartRect = { 500, 600, 1, 1 };
+	SDL_QueryTexture(restarttextTexture, NULL, NULL, &restartRect.w, &restartRect.h);
+	SDL_RenderCopy(renderer, restarttextTexture, NULL, &restartRect);
+	std::string escapeMessage = "Press ESC to exit";
+	SDL_Surface* escapeblendedText = TTF_RenderText_Blended(font, escapeMessage.c_str(), textColor);
+	SDL_Texture* escapetextTexture = SurfaceToTexture(escapeblendedText);
+	SDL_Rect escapeRect = { 500, 650, 1, 1 };
+	SDL_QueryTexture(escapetextTexture, NULL, NULL, &escapeRect.w, &escapeRect.h);
+	SDL_RenderCopy(renderer, escapetextTexture, NULL, &escapeRect);
+	SDL_RenderPresent(renderer);
+}
+void RenderManager::RenderMoveCount(const std::string& msg) {
+	font = TTF_OpenFont("Roboto_Condensed-Black.ttf", 90);
+	SDL_Surface* blendedText = TTF_RenderText_Blended(font, msg.c_str(), textColor);
+	SDL_Texture* textTexture = SurfaceToTexture(blendedText);
+	SDL_Rect textRect = { 800, 600, 1, 1 };
+	SDL_QueryTexture(textTexture, NULL, NULL, &textRect.w, &textRect.h);
+	SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
 	SDL_RenderPresent(renderer);
 }
 void RenderManager::RenderMessage(const std::string& msg)
 {
 	SDL_RenderClear(renderer);
+	font = TTF_OpenFont("Roboto_Condensed-Black.ttf", 90);
 	SDL_Surface* blendedText = TTF_RenderText_Blended(font, msg.c_str(), textColor);
 	SDL_Texture* textTexture = SurfaceToTexture(blendedText);
 
