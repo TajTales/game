@@ -10,7 +10,6 @@
 #include "RenderManager.h"
 #include "Block.h"
 
-using vertex = std::pair<int, int>;
 
 enum Direction
 {
@@ -32,22 +31,28 @@ public:
 private:
 	void handleInput(bool& loop, bool& shouldFlip);
 	void update(bool& loop);
-
+	void oldrecordMove();
+	void newrecordMove();
 	void clearLevelData();
 	void validateMap();
 	bool levelIsValid() const;
 	bool loadLevel(const std::string level);
 	void loadRow(const std::string line, const unsigned int row);
 	bool loadNextLevel();
+	void restartCurrentLevel();	
 
 	void movePlayer(const Direction direction);
 	bool move(const unsigned int row, const unsigned int col,
 		const Direction direction, const State state);
 	bool moveObject(const unsigned int row, const unsigned int col, int rowMovement,
 		int colMovement, const State state);
+
+
 private:
 	std::vector<std::vector<Block>> map;
+	std::vector<std::string> lines;
 	SDL_Rect playerPos;
+	int record;
 
 	unsigned int blockCols;
 	unsigned int blockRows; 
@@ -58,8 +63,9 @@ private:
 	unsigned int boxCount;
 	unsigned int boxesOnPlace;
 	unsigned int marksCount;
+	unsigned int moveCount;
 	bool playerIsMoving;
-
+	bool firstCheck;
 	unsigned int currentLevel;
 	unsigned int levelNum;
 };
