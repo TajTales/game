@@ -7,12 +7,15 @@ Game::Game()
 	, boxCount(0)
 	, boxesOnPlace(0)
 	, playerCount(0)
+	, moveCount(0)
+	, record(0)
 	, playerIsMoving(false)
+	, firstCheck(false)
 	, currentLevel(0)
-	, levelNum(10)
+	, levelNum(3)
 {
 	if (loadNextLevel())
-		renderManager.Render(map, true, false);
+		renderManager.Render(map, true, false,"0","Record: "+std::to_string(record));
 	else
 	{
 		renderManager.RenderMessage("No valid levels.");
@@ -30,9 +33,16 @@ void Game::runGame()
 	while (loop)
 	{
 		handleInput(loop, shouldFlip);
-		renderManager.Render(map, isFirst, shouldFlip);
+		std::string strmoveCount = "MoveCount: ";
+		strmoveCount += std::to_string(moveCount);
+		std::string strRecord = "Record: ";
+		strRecord += std::to_string(record);
+		if (firstCheck == false) {
+			oldrecordMove();
+			firstCheck = true;
+		}
+		renderManager.Render(map, isFirst, shouldFlip,strmoveCount,strRecord);
 		isFirst = false;
-		SDL_Delay(30); 
 		update(loop);
 	}
 }
@@ -65,6 +75,23 @@ bool Game::loadLevel(const std::string level)
 	file.close();
 	return levelIsValid();
 }
+void Game::restartCurrentLevel()
+{
+	std::string strLevel = "Levels\\level";
+	strLevel += std::to_string(currentLevel);
+	strLevel += ".txt";
+	clearLevelData();
+	if (!loadLevel(strLevel))
+	{
+		renderManager.RenderMessage("Level is invalid.");
+		SDL_Delay(2000);
+	}
+	else
+	{
+		validateMap();
+		renderManager.Render(map, true, false,"0","Record: "+std::to_string(record));
+	}
+}
 
 void Game::handleInput(bool& loop, bool& shouldFlip)
 {
@@ -77,6 +104,7 @@ void Game::handleInput(bool& loop, bool& shouldFlip)
 			loop = false;
 		else if (event.type == SDL_KEYDOWN)
 		{
+			moveCount++;
 			switch (event.key.keysym.sym)
 			{
 			case SDLK_RIGHT:
@@ -93,6 +121,12 @@ void Game::handleInput(bool& loop, bool& shouldFlip)
 			case SDLK_DOWN:
 				movePlayer(DOWN);
 				break;
+			case SDLK_r:
+				restartCurrentLevel();
+				break;
+			case SDLK_ESCAPE:
+				loop = false;
+				break;
 			default:
 				break;
 			}
@@ -103,6 +137,10 @@ void Game::update(bool& loop)
 {
 	if (boxCount == boxesOnPlace)
 	{
+		if (moveCount < record || record == 0) {
+			record = moveCount;
+			newrecordMove();
+		}
 		std::string strLevel = "Level ";
 		strLevel += std::to_string(currentLevel);
 		strLevel.append(" completed");
@@ -117,8 +155,42 @@ void Game::update(bool& loop)
 		}
 	}
 }
+void Game::oldrecordMove() {
+	std::ifstream file("Record\\Record.txt");
+	file.is_open();	
+	std::string line;
+	std::string recordCheck="Level"+std::to_string(currentLevel)+"::";
+	bool found = false;
+	while (std::getline(file, line)) {
+		if (line.find(recordCheck)==0) {
+			size_t pos = line.find("Record:");
+			record= std::stoi(line.substr(pos + 7));
+			found = true;
+		}
+		lines.push_back(line);
+	}
+	file.close();
+	if (!found) {
+		lines.push_back(recordCheck + "Record: "+std::to_string(record));
+	}
+}
+void Game::newrecordMove() {
+	std::ofstream outFile("Record\\Record.txt");
+	std::string recordCheck = "Level" + std::to_string(currentLevel) + "::";
+	outFile.is_open();
+	for ( auto line : lines) {
+		if (line.find(recordCheck) == 0) {
+			line = recordCheck + "Record: " + std::to_string(record);
+		}
+		outFile << line << std::endl;
+	}
+	outFile.close();
+}
 void Game::clearLevelData()
 {
+	for (size_t i=0;i< lines.size();i++) {
+		lines[i].clear();
+	}
 	if (!map.empty())
 	{
 		for (int i = blockRows - 1; i >= 0; --i)
@@ -133,6 +205,9 @@ void Game::clearLevelData()
 	boxesOnPlace = 0;
 	playerCount = 0;
 	playerIsMoving = false;
+	firstCheck = false;
+	moveCount = 0;
+	record = 0;
 }
 
 void Game::validateMap()
