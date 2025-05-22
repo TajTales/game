@@ -12,7 +12,8 @@ public:
 	RenderManager() { InitEverything(); };
 	~RenderManager() = default;
 
-	void Render(std::vector<std::vector<Block>>& map, bool isFirstRender, bool shouldFlip);
+	void Render(std::vector<std::vector<Block>>& map, bool isFirstRender, bool shouldFlip, const std::string& msg,const std::string& rec);
+	void RenderMoveCount(const std::string& msg);
 	void RenderMessage(const std::string& msg);
 
 	unsigned int getWindowWidth() const;
@@ -29,11 +30,10 @@ private:
 	SDL_Texture* LoadTexture(const std::string& str);
 	SDL_Texture* SurfaceToTexture(SDL_Surface* surf);
 
-private:
 	int posX = 300; 
 	int posY = 150;
-	int sizeX = 800; 
-	int sizeY = 600; 
+	int sizeX = 1200;
+	int sizeY = 800;
 
 	SDL_Rect backgroundPos{ 0, 0, sizeX, sizeY };
 	SDL_Texture* playerTexture;
